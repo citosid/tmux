@@ -13,7 +13,7 @@ choice=$(sort -fu <<< "$tmuxsessions" \
     -p \
     --info=hidden \
     --layout=reverse \
-    --preview='~/.tmux/scripts/switch-session-preview.bash {}' \
+    --preview='~/.config/tmux/scripts/switch-session-preview.bash {}' \
     --prompt='💻 ' \
     --pointer=' ' \
   | tr -d '\n'
