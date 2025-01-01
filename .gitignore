@@ -3,3 +3,4 @@ plugins/tmux-floax
 plugins/tmux-fzf
 plugins/tmux-resurrect
 plugins/vim-tmux-navigator
+.DS_Store
