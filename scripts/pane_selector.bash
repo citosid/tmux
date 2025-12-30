@@ -11,7 +11,7 @@ switch_to_pane() {
 panes=$(tmux list-panes -aF "#{pane_id}|#{pane_current_path}|#{pane_index}|#{pane_current_command}" | while IFS='|' read -r pane_id path pane_index command; do
   # Extract relative path from home directory
   relative_path="${path#$HOME/}"
-  echo "$relative_path - $command|$pane_id"
+  echo "$pane_id | $relative_path - $command"
 done)
 
 choice=$(sort -fu <<< "$panes" \
@@ -22,10 +22,12 @@ choice=$(sort -fu <<< "$panes" \
     --preview='~/.config/tmux/scripts/pane-preview.bash {}' \
     --prompt='📖 ' \
     --pointer=' ' \
+    --delimiter=' \| ' \
+    --with-nth=2 \
   | tr -d '\n'
 )
 
 if [[ -n "$choice" ]]; then
-  pane_id=$(echo "$choice" | awk -F'|' '{print $2}')
+  pane_id=$(echo "$choice" | awk -F' \| ' '{print $1}')
   switch_to_pane "$pane_id"
 fi
