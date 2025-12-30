@@ -8,10 +8,10 @@ switch_to_pane() {
 }
 
 # Format: store both display name and pane_id
-panes=$(tmux list-panes -aF "#{pane_id}|#{pane_current_path}|#{pane_index}" | while IFS='|' read -r pane_id path pane_index; do
+panes=$(tmux list-panes -aF "#{pane_id}|#{pane_current_path}|#{pane_index}|#{pane_current_command}" | while IFS='|' read -r pane_id path pane_index command; do
   # Extract relative path from home directory
   relative_path="${path#$HOME/}"
-  echo "$relative_path - Pane $pane_index|$pane_id"
+  echo "$relative_path - $command|$pane_id"
 done)
 
 choice=$(sort -fu <<< "$panes" \
