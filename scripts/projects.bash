@@ -11,33 +11,33 @@ function get_projects_from_workspace() {
 }
 
 function collect_projects() {
-    local -a base_paths=()
+    local base_paths
     IFS=":" read -r -a base_paths <<<"${TMUX_PROJECTS_BASE_PATH}"
-    local -a base_paths
-    local -a projects=()
+    local projects
 
     for base_path in "${base_paths[@]}"; do
         [[ ! -d "${base_path}" ]] && continue
 
         while IFS= read -r -d $'\0' workspace; do
             while IFS= read -r -d $'\0' project; do
-                projects+=("${project#"${HOME}/"}")
+                projects+="${project#"${HOME}/"}"$'\n'
             done < <(get_projects_from_workspace "${workspace}")
         done < <(get_workspaces "${base_path}")
     done
 
-    echo "${projects[@]}"
+    echo "${projects}"
 }
 
 function open_project() {
-    local -a projects
-    projects=($(collect_projects))
+    local projects
+    projects=$(collect_projects)
 
     local project_selected
-    project_selected=$(printf "%s\n" "${projects[@]}" | fzf-tmux -p \
+    project_selected=$(echo "${projects}" | fzf-tmux -p \
         --info=hidden \
         --layout=reverse \
-        --preview='lsd --icon=always $HOME/{}' \
+        --preview='~/.config/tmux/scripts/projects-preview.bash {}' \
+        --preview-window=right:45% \
         --prompt='📦 ' \
         --pointer=' ')
     [[ -z "${project_selected}" ]] && return
