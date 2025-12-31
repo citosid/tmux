@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -x
-
 source "${HOME}/.config/tmux/scripts/utilities.bash"
 
 function get_workspaces() {
