@@ -1,5 +1,9 @@
 #!/bin/bash
 
+set -x
+
+source "${HOME}/.config/tmux/scripts/utilities.bash"
+
 function get_workspaces() {
     local base_path=$1
     find "${base_path}" -mindepth 1 -maxdepth 1 \( -type d -o -type l \) -print0
@@ -34,16 +38,16 @@ function open_project() {
 
     local project_selected
     project_selected=$(echo "${projects}" | fzf-tmux -p \
-        --info=hidden \
-        --layout=reverse \
-        --preview='~/.config/tmux/scripts/projects-preview.bash {}' \
-        --preview-window=right:45% \
-        --prompt='📦 ' \
+            --info=hidden \
+            --layout=reverse \
+            --preview='~/.config/tmux/scripts/projects-preview.bash {}' \
+            --preview-window=right:45% \
+            --prompt='📦 ' \
         --pointer=' ')
     [[ -z "${project_selected}" ]] && return
 
     IFS="/" read -r __ workspace_name project_name <<<"${project_selected}"
-    
+
     tmux_switch_or_create_window \
         "${workspace_name}" \
         "${project_name}" \
